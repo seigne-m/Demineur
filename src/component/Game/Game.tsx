@@ -36,7 +36,7 @@ const getCoordsFromEvt = (evt: MouseEvent) => {
 };
 
 export default ({ width: w, height: h, mines, onLose, onWin }: Props) => {
-  const [boardState, setBoardState] = useState<tBoard>([new Uint16Array(1)]);
+  const [boardState, setBoardState] = useState<tBoard>([new Uint8Array(1)]);
   const [ScoreCount, setScoreCount] = useState(0);
   const isGameStart = useContext(GameStart);
 
@@ -51,7 +51,7 @@ export default ({ width: w, height: h, mines, onLose, onWin }: Props) => {
         minePositions
       )
     );
-  }, []);
+  }, [w, h, mines]);
 
   useEffect(() => {
     if (
@@ -113,7 +113,7 @@ export default ({ width: w, height: h, mines, onLose, onWin }: Props) => {
       }
       return boardState;
     },
-    [boardState]
+    [boardState, ScoreCount, revealHiddenSquares]
   );
 
   const onLeftClickWrapper = useCallback(
@@ -132,7 +132,7 @@ export default ({ width: w, height: h, mines, onLose, onWin }: Props) => {
     // @ts-ignore
     <Border w={w} h={h} onClick={onLeftClickWrapper} isGameStart={isGameStart}>
       {boardState.map((row, rowIdx) =>
-        Array.prototype.map.call(row, (value, colIdx) => (
+        Array.prototype.map.call(row, (value: number, colIdx: number) => (
           <Box
             key={`${rowIdx}-${colIdx}`}
             rowId={rowIdx}
